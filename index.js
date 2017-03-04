@@ -50,9 +50,6 @@ udpGarage.prototype.setState = function(state, callback) {
 	var doorState = (state == Characteristic.TargetDoorState.CLOSED) ? "closed" : "open";
 	this.log("Set state to ", doorState);
 
-	this.service
-        .setCharacteristic(Characteristic.PositionState, (moveUp ? 1 : 0));
-
     this.udpRequest(this.host, this.port, (doorState == "closed" ? this.garage_close_payload : this.garage_open_payload), function() {
         this.log("Success ", (doorState == "closed" ? "closing" : "opening"))
 		var currentState = (state == Characteristic.TargetDoorState.CLOSED) ? Characteristic.CurrentDoorState.CLOSED : Characteristic.CurrentDoorState.OPEN;
