@@ -59,6 +59,12 @@ udpGarage.prototype.setState = function(state, callback) {
     }.bind(this));
 },
 
+udpGarage.prototype.udpRequest = function(host, port, payload, callback) {
+        udp(host, port, payload, function (err) {
+            callback(err);
+        });
+    },	
+
 udpGarage.prototype.getServices = function() {
 	return [this.garageservice];
 }
