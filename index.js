@@ -12,10 +12,10 @@ function udpGarage(log, config) {
 	this.log = log;
 	this.name = config["name"];
 	this.host = config["host"];
-    this.port = config["port"];
+   	this.port = config["port"];
 	this.garage_open_payload = config["open_payload"];
 	this.garage_close_payload = config["close_payload"];
-	this.currentState = Characteristic.CurrentDoorState.CLOSED;
+	this.currentState = ((config["defaultState"] == "closed") ? Characteristic.CurrentDoorState.CLOSED; : Characteristic.CurrentDoorState.OPEN) || Characteristic.CurrentDoorState.CLOSED;;
 
 	this.garageservice = new Service.GarageDoorOpener(this.name);
 
@@ -50,13 +50,13 @@ udpGarage.prototype.setState = function(state, callback) {
 	var doorState = (state == Characteristic.TargetDoorState.CLOSED) ? "closed" : "open";
 	this.log("Set state to ", doorState);
 
-    this.udpRequest(this.host, this.port, (doorState == "closed" ? this.garage_close_payload : this.garage_open_payload), function() {
-        this.log("Success ", (doorState == "closed" ? "closing" : "opening"))
-		var currentState = (state == Characteristic.TargetDoorState.CLOSED) ? Characteristic.CurrentDoorState.CLOSED : Characteristic.CurrentDoorState.OPEN;
-        this.garageservice
-				.setCharacteristic(Characteristic.CurrentDoorState, currentState);
-				callback(null); // success
-    }.bind(this));
+   	this.udpRequest(this.host, this.port, (doorState == "closed" ? this.garage_close_payload : this.garage_open_payload), function() {
+		this.log("Success ", (doorState == "closed" ? "closing" : "opening"))
+			this.currentState = (state == Characteristic.TargetDoorState.CLOSED) ? Characteristic.CurrentDoorState.CLOSED : Characteristic.CurrentDoorState.OPEN;
+		this.garageservice
+			.setCharacteristic(Characteristic.CurrentDoorState, this.currentState);
+			callback(null); // success
+    	}.bind(this));
 },
 
 udpGarage.prototype.udpRequest = function(host, port, payload, callback) {
