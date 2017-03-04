@@ -6,7 +6,7 @@ Control your garage door through UDP packets
 
 ```
 {
-        "accessory": "garageDoor",
+        "accessory": "udpGarage",
         "name": "My Garag Door",
         "host": "192.168.0.X",
         "port": 80,
