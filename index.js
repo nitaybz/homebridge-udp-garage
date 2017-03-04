@@ -15,7 +15,7 @@ function udpGarage(log, config) {
    	this.port = config["port"];
 	this.garage_open_payload = config["open_payload"];
 	this.garage_close_payload = config["close_payload"];
-	this.currentState = (config["defaultState"] == "closed") ? Characteristic.CurrentDoorState.CLOSED; : Characteristic.CurrentDoorState.OPEN) || Characteristic.CurrentDoorState.CLOSED;
+	this.currentState = (config["defaultState"] == "closed") ? Characteristic.CurrentDoorState.CLOSED : Characteristic.CurrentDoorState.OPEN || Characteristic.CurrentDoorState.CLOSED;
 
 	this.garageservice = new Service.GarageDoorOpener(this.name);
 
