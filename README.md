@@ -10,8 +10,8 @@ Control your garage door through UDP packets
         "name": "My Garag Door",
         "host": "192.168.0.X",
         "port": 80,
-        "up_payload": "874652395hjui4d98523",
-        "down_payload": "8932y4123545j5k245325",
+        "garage_open_payload": "874652395hjui4d98523",
+        "garage_close_payload": "8932y4123545j5k245325"
 }
 ```
 
