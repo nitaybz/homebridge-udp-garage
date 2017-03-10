@@ -15,33 +15,23 @@ function udpGarage(log, config) {
    	this.port = config["port"];
 	this.garage_open_payload = config["open_payload"];
 	this.garage_close_payload = config["close_payload"];
-	this.currentState = (config["defaultState"] == "closed") ? Characteristic.CurrentDoorState.CLOSED : Characteristic.CurrentDoorState.OPEN;
-	this.log(this.currentState);
-	this.garageservice = new Service.GarageDoorOpener(this.name);
+	this.currentState = (config["defaultState"] == "locked") ? true : false;
+	this.log("locked = " + this.currentState);
+	
+	this.garageservice = new Service.LockMechanism(this.name);
 
 	this.garageservice
-		.getCharacteristic(Characteristic.CurrentDoorState)
+		.getCharacteristic(Characteristic.LockCurrentState)
 		.on('get', this.getState.bind(this));
 
 	this.garageservice
-		.getCharacteristic(Characteristic.TargetDoorState)
+		.getCharacteristic(Characteristic.LockTargetState)
 		.on('get', this.getState.bind(this))
 		.on('set', this.setState.bind(this));
-
-	this.garageservice
-		.getCharacteristic(Characteristic.ObstructionDetected)
-		.on('get', this.getStateObstruction.bind(this));
-
 }
-
-
-udpGarage.prototype.getStateObstruction = function(callback) {
-	callback(null, false); // no obstruction
-}
-
 
 udpGarage.prototype.getState = function(callback) {
-	this.log("current state");
+	this.log("current locked state is " + this.currentState);
 	callback(null, this.currentState);	
 
 }
@@ -52,9 +42,9 @@ udpGarage.prototype.setState = function(state, callback) {
 
    	this.udpRequest(this.host, this.port, (doorState == "closed" ? this.garage_close_payload : this.garage_open_payload), function() {
 		this.log("Success ", (doorState == "closed" ? "closing" : "opening"))
-			this.currentState = (state == Characteristic.TargetDoorState.CLOSED) ? Characteristic.CurrentDoorState.CLOSED : Characteristic.CurrentDoorState.OPEN;
+			this.currentState = (state == Characteristic.LockTargetState.SECURED) ? Characteristic.LockCurrentState.SECURED : Characteristic.LockCurrentState.UNSECURED;
 		this.garageservice
-			.setCharacteristic(Characteristic.CurrentDoorState, this.currentState);
+			.setCharacteristic(Characteristic.LockCurrentState, this.currentState);
 			callback(null); // success
     	}.bind(this));
 },
