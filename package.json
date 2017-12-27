@@ -1,6 +1,6 @@
 {
   "name": "homebridge-udp-garage",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "nitaybz",
   "description": "A Homebridge plugin to control Garage Door trough UDP packets",
   "license": "MIT",
